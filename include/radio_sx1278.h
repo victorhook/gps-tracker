@@ -6,8 +6,9 @@
 
 class RadioSX1278 : public Radio {
     public:
-        bool init() override;
         bool send(const uint8_t* data, const uint16_t len) override;
+        int init()    override;
+        void update() override;
 };
 
 

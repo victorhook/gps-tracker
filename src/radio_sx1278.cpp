@@ -5,18 +5,10 @@ bool RadioSX1278::send(const uint8_t* data, const uint16_t len) {
     return true;
 }
 
-result_t RadioSX1278::init() {
-    return RESULT_OK;
+int RadioSX1278::init() {
+    return 0;
 }
 
 void RadioSX1278::update() {
-
-}
-
-String RadioSX1278::name() {
-
-}
-
-uint32_t RadioSX1278::frequency() {
 
 }

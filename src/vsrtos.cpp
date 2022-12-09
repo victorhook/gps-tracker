@@ -1,19 +1,8 @@
-#include "scheduler.h"
-#include "task.h"
+#include "vsrtos.h"
 
 #include <Arduino.h>
 
-
-
-typedef struct {
-    Task* task;
-
-    float delay_ms;
-    uint64_t last_called;
-    uint64_t last_executed;
-} task_block_t;
-
-static task_block_t* task_blocks[10];
+static task_block_t** all_task_blocks;
 static size_t nbr_of_tasks;
 
 #define IDLE_TASK NULL
@@ -22,22 +11,25 @@ static size_t nbr_of_tasks;
 
 
 static task_block_t* getNextTask();
+static void scheduler_init();
+static bool is_init = false;
 
 
-void scheduler_init(Task* tasks[], const size_t number_of_tasks) {
-    for (size_t i = 0; i < number_of_tasks; i++) {
-        Task* task = tasks[i];
-        task_block_t* task_block = (task_block_t*) malloc(sizeof(task_block_t));
-        task_block->delay_ms = 1000.0 / task->frequency();
-        task_block->task = task;
-        task_blocks[i] = task_block;
+void scheduler_start(task_block_t task_blocks[], const size_t number_of_tasks) {
+    if (is_init) {
+        Serial.println(F("Scheduler already started!"));
+        return;
     }
 
-    nbr_of_tasks = nbr_of_tasks;
-}
+    all_task_blocks = &task_blocks;
+    nbr_of_tasks = number_of_tasks;
 
-void scheduler_run() {
-    Serial.println("Scheduler starting");
+    scheduler_init();
+    Serial.println(F("Scheduler initialized"));
+
+    is_init = true;
+
+    Serial.println(F("Scheduler starting"));
 
     while (1) {
         task_block_t* next_task = getNextTask();
@@ -59,7 +51,7 @@ static task_block_t* getNextTask() {
     uint64_t now = currentTime();
 
     for (size_t task = 0; task < nbr_of_tasks; task++) {
-        task_block_t* next_task = task_blocks[task];
+        task_block_t* next_task = all_task_blocks[task];
 
         uint64_t time_since_last_execution = now - next_task->last_executed;
         if (time_since_last_execution > next_task->delay_ms) {
@@ -71,4 +63,11 @@ static task_block_t* getNextTask() {
     }
 
     return IDLE_TASK;
+}
+
+static void scheduler_init() {
+    for (size_t i = 0; i < nbr_of_tasks; i++) {
+        task_block_t* task_block = all_task_blocks[i];
+        task_block->delay_ms = 1000.0 / task_block->frequency;
+    }
 }

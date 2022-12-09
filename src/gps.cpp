@@ -22,17 +22,9 @@ const position_t GPS::getPosition() {
     return pos;
 }
 
-result_t GPS::init() {
+int GPS::init() {
     _uart->begin(_baudRate);
-    return RESULT_OK;
-}
-
-String GPS::name() {
-    return "GPS";
-}
-
-uint32_t GPS::frequency() {
-    return 10;
+    return 0;
 }
 
 void GPS::update() {

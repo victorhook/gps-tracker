@@ -11,25 +11,17 @@ Led::Led() {
 
 }
 
-result_t Led::init() {
+int Led::init() {
   _led = new Adafruit_NeoPixel(1, LED_PIN, NEO_RGB + NEO_KHZ800);
   _led->begin();
 
   // (const Task* task, const uint16_t frequency)
 
-  return RESULT_OK;
+  return 0;
 }
 
 void Led::update() {
 
-}
-
-String Led::name() {
-  return "LED";
-}
-
-uint32_t Led::frequency() {
-  return 5;
 }
 
 void Led::setColor(const uint32_t color) {

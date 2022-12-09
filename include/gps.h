@@ -2,7 +2,7 @@
 #define GPS_H
 
 #include "machine.h"
-#include "task.h"
+#include "vsrtos.h"
 
 #include <SoftwareSerial.h>
 #include <TinyGPS.h>
@@ -20,10 +20,8 @@ class GPS : public Task {
         GPS(const uint8_t uartRx, const uint8_t uartTx, uint32_t baudRate = 4800);
         const position_t getPosition();
 
-        result_t init()      override;
-        void update()        override;
-        String name()        override;
-        uint32_t frequency() override;
+        int init()    override;
+        void update() override;
 
     private:
         position_t      _position;

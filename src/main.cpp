@@ -5,7 +5,7 @@
 #include "battery.h"
 #include "led.h"
 #include "result.h"
-#include "scheduler.h"
+#include "vsrtos.h"
 
 
 #ifdef RADIO_IN_USE_SX1278
@@ -19,12 +19,16 @@ Led led;
 //Battery battery(BATTERY_PIN);
 
 
-Task* tasks[] = {
-    {&gps, "GPS", 5},
-    {&led, "LED", 5}
+task_block_t task_blocks[] = {
+    {
+        .task=&gps,
+        {.name="GPS"},
+        .frequency=5
+    }
+    //{&led, "LED", 5}
 };
 
-#define NBR_OF_TASKS (sizeof(tasks) / sizeof(Task))
+#define NBR_OF_TASKS (sizeof(task_blocks) / sizeof(task_block_t))
 
 
 void setup() {
@@ -46,11 +50,11 @@ void setup() {
 
     // Check result after task initialization
     for (uint32_t i = 0; i < NBR_OF_TASKS; i++) {
-        Task* task = tasks[i];
-        result_t task_init_result = task->init();
+        task_block_t task_block = task_blocks[i];
+        int task_init_result = task_block.task->init();
 
         if (task_init_result != RESULT_OK) {
-            Serial.printf("Failed to initialize task: %s\n", task->name().c_str());
+            Serial.printf("Failed to initialize task: %s\n", task_block.name);
         }
 
         result = (result_t) (result | task_init_result);
@@ -63,17 +67,15 @@ void setup() {
         }
     }
 
-    Serial.println(F("System initialized OK, initializing scheduler"));
-    scheduler_init(tasks, NBR_OF_TASKS);
-
-    Serial.println(F("Scheduler initialized OK, starting scheduler"));
-    scheduler_run();
-
-    //const position_t pos = gps.getPosition();
-    //const float batteryVoltage = battery.getVoltage();
-    //com.communicate(pos, batteryVoltage);
+    Serial.println(F("System initialized OK, starting scheduler"));
+    scheduler_start(task_blocks, NBR_OF_TASKS);
 }
 
 void loop() {
 
 }
+
+
+//const position_t pos = gps.getPosition();
+//const float batteryVoltage = battery.getVoltage();
+//com.communicate(pos, batteryVoltage);

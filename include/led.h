@@ -1,7 +1,7 @@
 #ifndef LED_H
 #define LED_H
 
-#include "task.h"
+#include "vsrtos.h"
 #include <Adafruit_NeoPixel.h>
 
 
@@ -35,10 +35,8 @@ class Led : public Task {
         void setColor(const uint32_t color);
         void setLedState(const led_state_t led_state);
 
-        result_t init()      override;
-        void update()        override;
-        String name()        override;
-        uint32_t frequency() override;
+        int init()     override;
+        void update()  override;
     private:
         Adafruit_NeoPixel* _led;
 };
