@@ -12,3 +12,6 @@ int RadioSX1278::init() {
 void RadioSX1278::update() {
 
 }
+
+
+Radio* radio = new RadioSX1278();

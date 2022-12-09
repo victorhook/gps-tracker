@@ -3,7 +3,6 @@
 
 #include "vsrtos.h"
 
-
 class Radio : Task {
     public:
         virtual bool send(const uint8_t* data, const uint16_t len) = 0;
@@ -11,5 +10,6 @@ class Radio : Task {
         virtual void update() = 0;
 };
 
+extern Radio* radio;
 
 #endif /* RADIO_H */

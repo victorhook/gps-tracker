@@ -34,5 +34,6 @@ class GPS : public Task {
         void _getNewPosition();
 };
 
+extern GPS gps;
 
 #endif /* GPS_H */

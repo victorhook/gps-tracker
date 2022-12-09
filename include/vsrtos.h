@@ -27,7 +27,7 @@ typedef struct {
 } task_block_t;
 
 
-void scheduler_start(task_block_t task_blocks[], const size_t number_of_tasks);
+void scheduler_start(task_block_t* task_blocks[], const size_t number_of_tasks);
 
 
 #endif /* VSRTOS_H */

@@ -42,3 +42,6 @@ void GPS::_getNewPosition() {
     _gps->get_position(&_position.latitude, &_position.longitude, &_position.fix_age);
 }
 
+
+// Initialize GPS
+GPS gps(GPS_UART_RX, GPS_UART_TX, GPS_UART_BAUD);

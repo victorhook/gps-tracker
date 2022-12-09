@@ -15,13 +15,13 @@ static void scheduler_init();
 static bool is_init = false;
 
 
-void scheduler_start(task_block_t task_blocks[], const size_t number_of_tasks) {
+void scheduler_start(task_block_t* task_blocks[], const size_t number_of_tasks) {
     if (is_init) {
         Serial.println(F("Scheduler already started!"));
         return;
     }
 
-    all_task_blocks = &task_blocks;
+    all_task_blocks = task_blocks;
     nbr_of_tasks = number_of_tasks;
 
     scheduler_init();
@@ -65,9 +65,15 @@ static task_block_t* getNextTask() {
     return IDLE_TASK;
 }
 
+/*
+    Sets some default values for all the task_block structs, to ensure
+    that they have proper values before we begin.
+*/
 static void scheduler_init() {
     for (size_t i = 0; i < nbr_of_tasks; i++) {
         task_block_t* task_block = all_task_blocks[i];
         task_block->delay_ms = 1000.0 / task_block->frequency;
+        task_block->last_called = 0;
+        task_block->last_executed = 0;
     }
 }
