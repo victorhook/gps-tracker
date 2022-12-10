@@ -5,6 +5,7 @@
 #include "battery.h"
 #include "led.h"
 #include "result.h"
+#include "web.h"
 #include "vsrtos.h"
 
 #include <Arduino.h>
@@ -14,22 +15,30 @@
 task_block_t gps_task = {
     .task = &gps,
     {.name = "GPS"},
-    .frequency = 100
+    .frequency = 5
 };
 task_block_t led_task = {
     .task = &led,
     {.name = "LED"},
-    .frequency = 5
+    .frequency = 10
+};
+task_block_t web_task = {
+    .task = &web,
+    {.name = "WEB"},
+    .frequency = 20
 };
 
 task_block_t* task_blocks[] = {
     &gps_task,
-    &led_task
+    &led_task,
+    &web_task
 };
+
 
 #define NBR_OF_TASKS (sizeof(task_blocks) / sizeof(task_block_t*))
 
 static void init_task(const task_block_t* task_block, result_t* result);
+
 
 void setup() {
     Serial.begin(115200);
@@ -47,6 +56,7 @@ void setup() {
 
     // Check result after task initialization
     init_task(&gps_task, &result);
+    init_task(&web_task, &result);
 
     if (result != RESULT_OK) {
         while (1) {
