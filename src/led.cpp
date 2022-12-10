@@ -31,8 +31,7 @@ void Led::update() {
   // Get time difference since last time we switched led ON/OFF.
   unsigned long now = millis();
   unsigned long dt_ms = now - _last_time_led_switched;
-  bool led_is_on = true;
-
+  bool led_is_on = _led_is_on;
 
   switch (_next_state.mode) {
     case LED_MODE_OFF:
@@ -84,7 +83,7 @@ void Led::setLedState(const uint32 color, const led_mode_t mode) {
 }
 
 void Led::_setColor(const uint32_t color) {
-  digitalWrite(LED_BUILTIN, color == 0 ? LOW : HIGH);
+  digitalWrite(LED_BUILTIN, color == 0 ? HIGH : LOW);  // Active LOW
   return;
   static rgb_t rgb;
   memcpy(&rgb, &color, sizeof(rgb_t));
