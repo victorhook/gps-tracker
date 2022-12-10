@@ -3,6 +3,7 @@
 
 #include "gps.h"
 #include "radio.h"
+#include "vsrtos.h"
 
 
 typedef enum {
@@ -10,22 +11,19 @@ typedef enum {
 } protocol_t;
 
 
-class Communicator {
+class Communicator : Task {
     public:
         Communicator(const protocol_t protocol, Radio* radio);
         void communicate(const position_t pos, const float batteryVoltage);
+
+        int init() override;
+        void update() override;
     private:
         protocol_t _protocol;
         Radio*     _radio;
 };
 
-/*
-Communicator com(PROTOCOL_SIMPLE, &radio);
-
-
-com.communicate(data);
-
-*/
+extern Communicator communicator;
 
 
 #endif /* COMMUNICATOR_H */

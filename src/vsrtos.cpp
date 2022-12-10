@@ -25,7 +25,7 @@ void scheduler_start(task_block_t* task_blocks[], const size_t number_of_tasks) 
     nbr_of_tasks = number_of_tasks;
 
     scheduler_init();
-    Serial.println(F("Scheduler initialized"));
+    Serial.printf("Scheduler initialized with %d tasks\n", nbr_of_tasks);
 
     is_init = true;
 
@@ -35,14 +35,26 @@ void scheduler_start(task_block_t* task_blocks[], const size_t number_of_tasks) 
         task_block_t* next_task = getNextTask();
         if (next_task == IDLE_TASK) {
             // Not much to do, we're just idling.
+            yield();
             continue;
         }
 
+        //Serial.printf("[%d] Running task: %s\n", currentTime(), next_task->name);
         next_task->last_called = currentTime();
         next_task->task->update();
         next_task->last_executed = currentTime();
     }
 }
+
+
+vs_result_t Queue::put() {
+    return VS_RESULT_OK;
+}
+
+vs_result_t Queue::get() {
+    return VS_RESULT_OK;
+}
+
 
 
 // -- Private -- /
@@ -54,6 +66,7 @@ static task_block_t* getNextTask() {
         task_block_t* next_task = all_task_blocks[task];
 
         uint64_t time_since_last_execution = now - next_task->last_executed;
+
         if (time_since_last_execution > next_task->delay_ms) {
             // Enough time has passed since this task executed,
             // it's time to execute this task.

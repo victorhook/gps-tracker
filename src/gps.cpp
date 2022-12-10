@@ -28,7 +28,8 @@ int GPS::init() {
 }
 
 void GPS::update() {
-
+    while (_uart->available() > 0)
+        Serial.write(_uart->read());
 }
 
 // -- Private -- /

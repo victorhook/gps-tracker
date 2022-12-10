@@ -11,11 +11,10 @@
 
 
 //Communicator com(PROTOCOL_SIMPLE, radio);
-//Battery battery(BATTERY_PIN);
 task_block_t gps_task = {
     .task = &gps,
     {.name = "GPS"},
-    .frequency = 5
+    .frequency = 100
 };
 task_block_t led_task = {
     .task = &led,
@@ -28,11 +27,9 @@ task_block_t* task_blocks[] = {
     &led_task
 };
 
-#define NBR_OF_TASKS (sizeof(task_blocks) / sizeof(task_block_t))
+#define NBR_OF_TASKS (sizeof(task_blocks) / sizeof(task_block_t*))
 
 static void init_task(const task_block_t* task_block, result_t* result);
-
-
 
 void setup() {
     Serial.begin(115200);
@@ -62,7 +59,8 @@ void setup() {
     scheduler_start(task_blocks, NBR_OF_TASKS);
 }
 
-void loop() {}
+void loop() {
+}
 
 
 //const position_t pos = gps.getPosition();

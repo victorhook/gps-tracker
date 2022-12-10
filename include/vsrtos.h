@@ -6,6 +6,12 @@
 #include "stdint.h"
 #include "cstddef"
 
+
+typedef enum {
+    VS_RESULT_OK = 0
+} vs_result_t;
+
+
 class Task {
     /*
         Abstract class representing a Task.
@@ -13,6 +19,17 @@ class Task {
     public:
         virtual int init()    = 0;
         virtual void update() = 0;
+};
+
+
+class Queue {
+    public:
+        Queue(const size_t size_of_element, const size_t max_nbr_of_elements);
+        vs_result_t put();
+        vs_result_t get();
+    private:
+        size_t _size_of_element;
+        size_t _max_nbr_of_elements;
 };
 
 

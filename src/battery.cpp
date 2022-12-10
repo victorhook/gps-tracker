@@ -1,6 +1,6 @@
 #include "battery.h"
+#include "machine.h"
 #include <Arduino.h>
-
 
 Battery::Battery(const uint8_t pin)
 : _pin(pin) {
@@ -20,3 +20,5 @@ float Battery::getVoltage() {
 
     return voltage;
 }
+
+Battery battery(BATTERY_PIN);

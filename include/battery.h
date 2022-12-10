@@ -13,5 +13,7 @@ class Battery {
         uint8_t _pin;
 };
 
+extern Battery battery;
+
 
 #endif /* BATTERY_H */

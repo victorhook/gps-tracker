@@ -2,31 +2,37 @@
 #include "machine.h"
 
 
-static const led_state_t default_led_state = {
-  .mode = LED_MODE_ON,
-  .color = COLOR_BLUE,
-};
+#define DEFAULT_COLOR COLOR_BLUE
+#define DEFAULT_MODE  LED_MODE_ON
+
 
 Led::Led() {
-
+  _curr_state.color = DEFAULT_COLOR;
+  _curr_state.mode  = DEFAULT_MODE;
 }
 
 int Led::init() {
-  _led = new Adafruit_NeoPixel(1, LED_PIN, NEO_RGB + NEO_KHZ800);
-  _led->begin();
+  pinMode(LED_BUILTIN, OUTPUT);
+  //_led = new Adafruit_NeoPixel(1, LED_PIN, NEO_RGB + NEO_KHZ800);
+  //_led->begin();
   return 0;
 }
 
 void Led::update() {
-  if (_next_state.mode == _curr_state.mode) {
-    // No state change since last update, we'll just return.
-    return;
-  }
+  //Serial.printf(" cMode: %d, cColor: %d", _curr_state.mode, _curr_state.color);
+  //Serial.printf(" nMode: %d, ncolor: %d ", _next_state.mode, _next_state.color);
+  //Serial.printf("dt: %d, is_on: %d\n", dt_ms, led_is_on);
+
+  //if ((_next_state.mode == _curr_state.mode) && (_next_state.color == _curr_state.color)) {
+  //  // No state change since last update, we'll just return.
+  //  return;
+  //}
 
   // Get time difference since last time we switched led ON/OFF.
   unsigned long now = millis();
   unsigned long dt_ms = now - _last_time_led_switched;
   bool led_is_on = true;
+
 
   switch (_next_state.mode) {
     case LED_MODE_OFF:
@@ -54,16 +60,22 @@ void Led::update() {
   }
 
   if (led_is_on) {
-    _setColor(_next_state.color);
+    _curr_state.color = _next_state.color;
   } else {
-    _setColor(LED_OFF);
+    _curr_state.color = LED_OFF;
   }
 
+  // Save time if we switched from ON/OFF
   if (led_is_on != _led_is_on) {
     _last_time_led_switched = now;
   }
 
-  _curr_state = _next_state;
+  // Update state
+  _curr_state.mode = _next_state.mode;
+  _led_is_on = led_is_on;
+
+  // Set color
+  _setColor(_curr_state.color);
 }
 
 void Led::setLedState(const uint32 color, const led_mode_t mode) {
@@ -72,6 +84,8 @@ void Led::setLedState(const uint32 color, const led_mode_t mode) {
 }
 
 void Led::_setColor(const uint32_t color) {
+  digitalWrite(LED_BUILTIN, color == 0 ? LOW : HIGH);
+  return;
   static rgb_t rgb;
   memcpy(&rgb, &color, sizeof(rgb_t));
   _led->Color(rgb.r, rgb.g, rgb.b);
