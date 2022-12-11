@@ -22,6 +22,12 @@ class Task {
 };
 
 
+
+template<typename T>
+struct element_t {
+    T t;
+};
+
 class Queue {
     public:
         Queue(const size_t size_of_element, const size_t max_nbr_of_elements);

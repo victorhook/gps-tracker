@@ -9,6 +9,10 @@
 
 #define LED_PIN       0
 
+#define RADIO_PIN_CS 0
+#define RADIO_PIN_RESET 0
+#define RADIO_PIN_IRQ 0
+
 #define RADIO_IN_USE_SX1278
 //#define RADIO_IN_USE_SX1280  <-- Can add more here...
 

@@ -6,9 +6,12 @@
 
 class RadioSX1278 : public Radio {
     public:
+        RadioSX1278(const long frequency = 443e6);
         bool send(const uint8_t* data, const uint16_t len) override;
-        int init()    override;
-        void update() override;
+        int init() override;
+
+    private:
+        long _frequency;
 };
 
 

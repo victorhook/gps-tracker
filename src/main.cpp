@@ -11,7 +11,6 @@
 #include <Arduino.h>
 
 
-//Communicator com(PROTOCOL_SIMPLE, radio);
 task_block_t gps_task = {
     .task = &gps,
     {.name = "GPS"},
@@ -27,9 +26,15 @@ task_block_t web_task = {
     {.name = "WEB"},
     .frequency = 20
 };
+task_block_t com_task = {
+    .task = &communicator,
+    {.name = "COM"},
+    .frequency = 50
+};
 
 task_block_t* task_blocks[] = {
     &gps_task,
+    &com_task,
     &led_task,
     &web_task
 };
@@ -54,10 +59,15 @@ void setup() {
     // Set initial led state
     led.setLedState(COLOR_GREEN, LED_MODE_BLINK_1_HZ);
 
-    // Check result after task initialization
+    // Initialize part of system that are not task-bound
+    battery.init();
+
+    // Initialize system tasks
     init_task(&gps_task, &result);
     init_task(&web_task, &result);
+    init_task(&com_task, &result);
 
+    // Check result after task initialization
     if (result != RESULT_OK) {
         while (1) {
             Serial.println(F("System failed to initialize properly..."));
@@ -71,11 +81,6 @@ void setup() {
 
 void loop() {
 }
-
-
-//const position_t pos = gps.getPosition();
-//const float batteryVoltage = battery.getVoltage();
-//com.communicate(pos, batteryVoltage);
 
 
 static void init_task(const task_block_t* task_block, result_t* result) {
