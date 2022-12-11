@@ -9,6 +9,8 @@
 
 #define LED_PIN       0
 
+#define BUTTON_PIN 0
+
 #define RADIO_PIN_CS 0
 #define RADIO_PIN_RESET 0
 #define RADIO_PIN_IRQ 0

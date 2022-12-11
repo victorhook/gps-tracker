@@ -6,6 +6,7 @@
 #include "led.h"
 #include "result.h"
 #include "web.h"
+#include "button.h"
 #include "vsrtos.h"
 
 #include <Arduino.h>
@@ -39,7 +40,6 @@ task_block_t* task_blocks[] = {
     &web_task
 };
 
-
 #define NBR_OF_TASKS (sizeof(task_blocks) / sizeof(task_block_t*))
 
 static void init_task(const task_block_t* task_block, result_t* result);
@@ -61,6 +61,7 @@ void setup() {
 
     // Initialize part of system that are not task-bound
     battery.init();
+    button.init();
 
     // Initialize system tasks
     init_task(&gps_task, &result);
