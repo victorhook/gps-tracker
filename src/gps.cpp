@@ -12,11 +12,6 @@ _baudRate(baudRate)
 }
 
 const position_t GPS::getPosition() {
-
-    if (_uart->available()) {
-        _getNewPosition();
-    }
-
     position_t pos;
     memcpy(&pos, &_position, sizeof(position_t));
     return pos;
@@ -28,8 +23,7 @@ int GPS::init() {
 }
 
 void GPS::update() {
-    while (_uart->available() > 0)
-        Serial.write(_uart->read());
+    _getNewPosition();
 }
 
 // -- Private -- /

@@ -15,6 +15,10 @@ bool RadioSX1278::send(const uint8_t* data, const uint16_t len) {
     return true;
 }
 
+size_t RadioSX1278::read(uint8_t* buf, const uint16_t len) {
+    LoRa.readBytes(buf, len);
+}
+
 int RadioSX1278::init() {
     LoRa.setPins(RADIO_PIN_CS, RADIO_PIN_RESET, RADIO_PIN_IRQ);
     LoRa.setSpreadingFactor(6);  // 6-12

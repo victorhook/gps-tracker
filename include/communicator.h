@@ -3,22 +3,11 @@
 
 #include "gps.h"
 #include "radio.h"
+#include "protocol.h"
 #include "vsrtos.h"
 
 
 #define TX_BUF_MAX_SIZE 128
-
-
-typedef enum {
-    PROTOCOL_SIMPLE
-} protocol_t;
-
-typedef struct {
-    position_t pos;
-    float      batteryVoltage;
-    uint64_t   timestamp;
-} __attribute__((packed)) protocol_simple_packet_t;
-
 
 class Communicator : public Task {
     public:
